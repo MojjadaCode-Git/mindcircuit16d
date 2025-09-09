@@ -2,42 +2,43 @@ pipeline {
     agent any
 
     environment {
-        TOMCAT_URL = 'http://54.165.35.212:8080/manager/text'
+        // Set JAVA_HOME if needed (optional, Jenkins may detect automatically)
+        JAVA_HOME = tool name: 'JDK17', type: 'jdk' // Replace with your Jenkins JDK tool name
+        PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/MojjadaCode-Git/mindcircuit16d.git'
+                // Checkout the main branch from your GitHub repo
+                git branch: 'main', url: 'https://github.com/MojjadaCode-Git/mindcircuit16d.git'
             }
         }
 
-        stage('Build WAR') {
+        stage('Build') {
             steps {
-                sh 'mvn clean package'
+                // Run Maven clean package
+                withMaven(maven: 'Maven3') {  // Replace 'Maven3' with your Jenkins Maven tool name
+                    sh 'mvn clean package'
+                }
             }
         }
 
         stage('Deploy to Tomcat') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'tomcat-deploy-creds', usernameVariable: 'TOMCAT_USER', passwordVariable: 'TOMCAT_PASS')]) {
-                    sh """
-                    mvn cargo:deploy \
-                        -Dcargo.remote.username=$TOMCAT_USER \
-                        -Dcargo.remote.password=$TOMCAT_PASS \
-                        -Dcargo.remote.uri=${TOMCAT_URL}
-                    """
-                }
+                // Deploy WAR using Cargo plugin
+                // You need to configure cargo plugin in your pom.xml with credentials & Tomcat URL
+                sh 'mvn cargo:deploy'
             }
         }
     }
 
     post {
         success {
-            echo 'Deployment succeeded!'
+            echo 'Build and Deployment Successful!'
         }
         failure {
-            echo 'Deployment failed!'
+            echo 'Build or Deployment Failed.'
         }
     }
 }
