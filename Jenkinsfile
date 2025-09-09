@@ -8,28 +8,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout your source code
                 git 'https://github.com/MojjadaCode-Git/mindcircuit16d.git'
             }
         }
 
         stage('Build WAR') {
             steps {
-                // Build the WAR file with Maven
                 sh 'mvn clean package'
             }
         }
 
         stage('Deploy to Tomcat') {
             steps {
-                // Use Jenkins credentials to securely pass username/password to Maven cargo plugin
                 withCredentials([usernamePassword(credentialsId: 'tomcat-deploy-creds', usernameVariable: 'TOMCAT_USER', passwordVariable: 'TOMCAT_PASS')]) {
-                    sh '''
-                        mvn deploy \
-                          -Dcargo.remote.username=$TOMCAT_USER \
-                          -Dcargo.remote.password=$TOMCAT_PASS \
-                          -Dcargo.remote.uri=${TOMCAT_URL}
-                    '''
+                    sh """
+                    mvn cargo:deploy \
+                        -Dcargo.remote.username=$TOMCAT_USER \
+                        -Dcargo.remote.password=$TOMCAT_PASS \
+                        -Dcargo.remote.uri=${TOMCAT_URL}
+                    """
                 }
             }
         }
@@ -44,4 +41,3 @@ pipeline {
         }
     }
 }
-
