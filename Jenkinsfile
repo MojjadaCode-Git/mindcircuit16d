@@ -5,26 +5,24 @@ pipeline {
         TOMCAT_URL = 'http://54.165.35.212:8080/manager/text'
     }
 
-    tools {
-        maven 'Maven 3.8.5'   // Replace with your configured Maven version name in Jenkins
-        jdk 'JDK 17'          // Replace with your configured JDK version name in Jenkins
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git 'https://your-repo-url.git'  // Replace with your Git repo
+                // Checkout your source code
+                git 'https://github.com/MojjadaCode-Git/mindcircuit16d.git'
             }
         }
 
         stage('Build WAR') {
             steps {
+                // Build the WAR file with Maven
                 sh 'mvn clean package'
             }
         }
 
         stage('Deploy to Tomcat') {
             steps {
+                // Use Jenkins credentials to securely pass username/password to Maven cargo plugin
                 withCredentials([usernamePassword(credentialsId: 'tomcat-deploy-creds', usernameVariable: 'TOMCAT_USER', passwordVariable: 'TOMCAT_PASS')]) {
                     sh '''
                         mvn deploy \
@@ -46,3 +44,4 @@ pipeline {
         }
     }
 }
+
