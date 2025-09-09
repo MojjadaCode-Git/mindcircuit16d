@@ -1,31 +1,56 @@
-<build>
-  <plugins>
-    <plugin>
-      <groupId>org.codehaus.cargo</groupId>
-      <artifactId>cargo-maven2-plugin</artifactId>
-      <version>1.9.7</version> <!-- Latest as of 2025 -->
-      <configuration>
-        <container>
-          <containerId>tomcat9x</containerId>
-          <type>remote</type>
-        </container>
-        <configuration>
-          <type>runtime</type>
-          <properties>
-            <cargo.remote.uri>http://54.165.35.212:8080/manager/text</cargo.remote.uri>
-          </properties>
-        </configuration>
-        <deployables>
-          <deployable>
-            <groupId>com.yourcompany</groupId>
-            <artifactId>mindcircuitbatch16d</artifactId>
-            <type>war</type>
-            <properties>
-              <context>MC-APP</context>
-            </properties>
-          </deployable>
-        </deployables>
-      </configuration>
-    </plugin>
-  </plugins>
-</build>
+<project xmlns="http://maven.apache.org/POM/4.0.0"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0  
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+
+    <modelVersion>4.0.0</modelVersion>  
+
+    <groupId>com.mindcircuit</groupId>  
+    <artifactId>mindcircuitbatch16d</artifactId>  
+    <version>1.1.0</version>  
+    <packaging>war</packaging>  
+
+    <build>  
+        <plugins>  
+            <!-- Maven Compiler Plugin -->  
+            <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-compiler-plugin</artifactId>  
+                <version>3.8.1</version>  
+                <configuration>  
+                    <source>17</source>  
+                    <target>17</target>  
+                </configuration>  
+            </plugin>  
+
+            <!-- Cargo Maven2 Plugin for remote deployment -->  
+            <plugin>  
+                <groupId>org.codehaus.cargo</groupId>  
+                <artifactId>cargo-maven2-plugin</artifactId>  
+                <version>1.9.0</version>  
+                <configuration>  
+                    <container>  
+                        <containerId>tomcat9x</containerId>  
+                        <type>remote</type>  
+                    </container>  
+                    <configuration>  
+                        <type>runtime</type>  
+                        <properties>  
+                            <cargo.remote.username>${cargo.remote.username}</cargo.remote.username>  
+                            <cargo.remote.password>${cargo.remote.password}</cargo.remote.password>  
+                            <cargo.remote.uri>http://54.165.35.212:8080/manager/text</cargo.remote.uri>  
+                        </properties>  
+                    </configuration>  
+                    <deployables>  
+                        <deployable>  
+                            <groupId>com.mindcircuit</groupId>  
+                            <artifactId>mindcircuitbatch16d</artifactId>  
+                            <type>war</type>  
+                        </deployable>  
+                    </deployables>  
+                </configuration>  
+            </plugin>  
+        </plugins>  
+    </build>  
+
+</project>
