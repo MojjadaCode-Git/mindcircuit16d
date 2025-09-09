@@ -14,7 +14,7 @@ pipeline {
         stage('Build Artifact') {
             steps {
                 echo 'This stage builds the code using maven'
-                sh 'mvn clean install'			
+                sh 'mvn clean install'
             }
         }
 		
@@ -23,10 +23,12 @@ pipeline {
                 echo 'This stage deploys .war to tomcat webserver'
                 deploy adapters: [
                     tomcat9(
-                        credentialsId: 'tomcat',
+                        credentialsId: 'tomcat',   // must exist in Jenkins credentials
                         url: 'http://44.223.26.72:8090/manager/text'
                     )
-                ], contextPath: 'MC-APP', war: '**/*.war'
+                ],
+                contextPath: 'MC-APP',
+                war: '**/*.war'
             }
         }		
 		
